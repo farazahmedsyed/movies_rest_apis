@@ -1,0 +1,66 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="Faraz" id="1">
+        <sql>
+            create table users (
+            id bigint not null auto_increment primary key,
+            name varchar(255) not null unique,
+            updated_time timestamp null on update current_timestamp,
+            created_time timestamp not null default current_timestamp
+            );
+        </sql>
+        <rollback>
+            <sql>
+                drop table users;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Faraz" id="2">
+        <sql>
+            create table movies (
+            id bigint not null auto_increment primary key,
+            director_id bigint not null,
+            rank int not null,
+            title varchar(255) not null unique,
+            genre varchar(255) not null,
+            `year` int not null,
+            run_time varchar(100) not null,
+            rating double not null,
+            description text not null,
+            updated_time timestamp null on update current_timestamp,
+            created_time timestamp not null default current_timestamp,
+            foreign key (director_id) references users(id)
+            );
+        </sql>
+        <rollback>
+            <sql>
+                drop table movies;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Faraz" id="3">
+        <sql>
+            create table movie_actors (
+            id bigint not null auto_increment primary key,
+            user_id bigint not null,
+            movie_id bigint not null,
+            updated_time timestamp null on update current_timestamp,
+            created_time timestamp not null default current_timestamp,
+            foreign key (user_id) references users(id),
+            foreign key (movie_id) references movies(id)
+            );
+        </sql>
+        <rollback>
+            <sql>
+                drop table movie_actors;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
